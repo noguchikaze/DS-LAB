@@ -38,17 +38,17 @@ int main(int argc, char* argv[])
 
 	if(argc == 3)
 	{
-		cout << "execute the first method"<<endl;
+		//cout << "execute the first method"<<endl;
 		method1(argv[1],argv[2]);
 	}
 	else if(argc == 4)
 	{
-		cout<<"execute both method"<<endl;
-	//	method1(argv[1],argv[2]);
+		//cout<<"execute both method"<<endl;
+		method1(argv[1],argv[2]);
 		method2(argv[1],argv[3]);
 	}
 	else
-		cout<<"wrong input"<<endl;
+		//cout<<"wrong input"<<endl;
 
 	return 0;
 }//end of main
@@ -90,7 +90,6 @@ void method2(char* input, char* output)
 	//read the maze from file and assign value to the mark
 	for(int i = 0; i < w; i++) //at least read the amount of the matrix
 	{
-		cout<<endl;
 		for(int j = 0; j < l; j++)
 		{
 			fin>>block;
@@ -124,7 +123,7 @@ void method2(char* input, char* output)
 			//check if next x and y have their way
 			if( maze[i][j] == -3 )	//get to the end
 			{
-				cout<<"shortest road success! It takes "<< last_pos.steps + 1 << "steps to get to goal"<<endl;
+				//cout<<"shortest road success! It takes "<< last_pos.steps + 1 << "steps to get to goal"<<endl;
 				//trace back with the coordinate now in (i,j)
 				for(direction = 0; direction<4; direction++)//start from one step forward the E
 				{
@@ -140,7 +139,7 @@ void method2(char* input, char* output)
 				for(int k = last_pos.steps; k >= 0 ; k--)
 				{
 					maze[i][j] = -4;
-					cout << k << ' ';
+					//cout << k << ' ';
 					for(direction = 0; direction<4; direction++)
 					{
 						if(maze[i+move[direction].ver][j + move[direction].hor] == k)
@@ -158,30 +157,30 @@ void method2(char* input, char* output)
 						if(maze[i][j] == -1)
 						{
 							fout <<'2'<< ' ';
-							cout <<'@'<< ' ';
+							//cout <<'@'<< ' ';
 						}
 						else if(maze[i][j] == -2)
 						{	
-							cout << 'S' << ' ';
+							//cout << 'S' << ' ';
 							fout << 'S' << ' ';
 						}
 						else if(maze[i][j] == -3)
 						{	
-							cout << 'E' << ' ';
+							//cout << 'E' << ' ';
 							fout << 'E' << ' ';
 						}
 						else if(maze[i][j] == -4)
 						{
 							fout << 1 << ' ';
-							cout << 1 << ' ';
+							//cout << 1 << ' ';
 						}
 						else
 						{
 							fout << 0 << ' ';
-							cout << 0 << ' ';
+							//cout << 0 << ' ';
 						}
 					}//end of inner fo
-					cout<<'\n';
+					//cout<<'\n';
 					fout<<'\n';
 				} //end of output maze
 				return;
@@ -191,14 +190,15 @@ void method2(char* input, char* output)
 				que.push(Mice(i, j, last_pos.steps + 1));	//push into queue
 				//element put into trace is last coordinate and direction
 				maze[i][j] = last_pos.steps + 1;
-//				cout << '(' << i << ',' << j << ") comes from " 
-//				<< '(' << last_pos.x << ',' << last_pos.y << ')' << endl;
+
 
 			}//end of else if there is a way
 			else	//if encountered a wall or already marked
 			{ ;}	// do nothing
 		}//end of inner for(;;)
 	}//end of outer for(;;)
+	fout.close();
+	fin.close();
 }//end of method2
 
 void method1( char* input, char* output)
@@ -233,12 +233,12 @@ void method1( char* input, char* output)
 	//read the maze from file and assign value to the mark
 	for(int i = 0; i < w; i++) //at least read the amount of the matrix
 	{
-		cout<<endl;
+		//cout<<endl;
 		for(int j = 0; j < l; j++)
 		{
 			fin>>block;
 			mark[i][j] = block;
-			cout<<mark[i][j]<<' ';
+			//cout<<mark[i][j]<<' ';
 			if(block == 'S') //START
 			{
 				step.push(Mouse(i-1,j,N)); //step is a type of Mouse
@@ -256,7 +256,8 @@ void method1( char* input, char* output)
 		step.pop(); //pop out last move including direction
 		if(flag != 0)
 		{
-			mark[last_move.x][last_move.y] = '0';
+
+			mark[last_move.x][last_move.y] = '3';
 		}
 		flag++;
 		int row = last_move.y - move[last_move.dir].hor;  //back to last coordinate
@@ -271,30 +272,34 @@ void method1( char* input, char* output)
 			//step out and trial
 			if(mark[col][row] == 'E')
 			{
-				cout<<"success XD"<<endl;
+				//cout<<"success XD"<<endl;
 				for(int i = 0; i < w; i++)
 				{
 					for(int j = 0; j < l; j++)
 					{
+						/*Mouse road = step.top();
+						step.pop();*/
+						if(mark[i][j] == '3')
+							mark[i][j] = '0';
 						fout<<mark[i][j]<<' ';
-						cout<<mark[i][j]<<' ';
+						//cout<<mark[i][j]<<' ';
 					}
 					fout<<'\n';
-					cout<<'\n';
+					//cout<<'\n';
 				}
-				cout<<"s = ("<<sx<<", "<<sy<<')'<<endl;
+				//cout<<"s = ("<<sx<<", "<<sy<<')'<<endl;
 				return;
 			}
 			else if(mark[col][row] == '2' )
 			{
-				cout<<"encounter a wall"<<endl;
+				//cout<<"encounter a wall"<<endl;
 				row -= move[direction].hor; //back to last position
 				col -= move[direction].ver; //same
 				continue;
 			}
-			else if(mark[col][row] == '1')
+			else if(mark[col][row] == '1'||mark[col][row] == '3')
 			{
-				cout<<"already stepped"<<endl;
+				//cout<<"already stepped"<<endl;
 				row -= move[direction].hor;
 				col -= move[direction].ver;
 			}
@@ -304,7 +309,7 @@ void method1( char* input, char* output)
 				//<<col<<','<<row<<" )"<<endl;
 				mark[col][row] = '1'; //mark as already came
 				step.push(Mouse( col , row , direction));
-				cout << '(' << col  << ',' << row <<')' << endl;
+				//cout << '(' << col  << ',' << row <<')' << endl;
 				//push last position
 				direction = -1; //back to try East again
 			}
